@@ -1,0 +1,13 @@
+---
+- name: Instgall WSUS Binaries
+  import_tasks: install.yml
+
+- name: Configure WSUS Server
+  import_tasks: configure.yml
+
+- name: configure Auto Cleanup
+  import_tasks: cleanup.yml
+
+- name: Pull updates
+  import_tasks: syncronize.yml
+
