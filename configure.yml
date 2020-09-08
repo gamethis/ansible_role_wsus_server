@@ -1,0 +1,107 @@
+---
+- name: Create content folder
+  win_file:
+    path: "{{ content_folder }}"
+    state: directory
+
+- name: Set content folder in WSUS
+  win_command: 'WsusUtil.exe postinstall CONTENT_DIR={{ content_folder }}'
+  args:
+      chdir: 'C:\Program Files\Update Services\Tools'
+      creates: "{{ content_folder }}\\WSUSContent"
+
+- name: Set WSUS to synchronise from Microsoft Update
+  win_shell: |
+    Set-WsusServerSynchronization -SyncFromMU
+
+- name: Set Updates to English Only
+  win_shell: |
+    $wsusconfig = (Get-WsusServer).GetConfiguration()
+    $wsusconfig.AllUpdateLanguagesEnabled = $false
+    $wsusconfig.SetEnabledUpdateLanguages("en")
+    $wsusconfig.Save()
+
+- name: Configure Proxy for WSUS Server
+  win_shell: |
+    $wsus = Get-WSUSServer
+    $wsusConfig = $wsus.GetConfiguration()
+    $wsusConfig.ProxyName = "{{ wsus_proxy }}"
+    $wsusConfig.ProxyServerPort = "{{ wsus_proxy_port }}"
+    $wsusConfig.UseProxy = $True
+    $wsusConfig.AnonymousProxyAccess = $True
+    $wsusConfig.Save()
+  when:
+  - use_proxy
+  - wsus_proxy is defined
+  - wsus_proxy_port is defined
+
+
+- name: Get Synchronization Source State
+  win_shell: |
+    (Get-WsusServer).GetConfiguration().SyncFromMicrosoftUpdate
+  register: wsus_sync_source_state_raw
+
+- name: Get All Languages Enabled State
+  win_shell: |
+    (Get-WsusServer).GetConfiguration().AllUpdateLanguagesEnabled
+  register: wsus_all_languages_enabled_raw
+
+- name: Get Last Sync Year
+  win_shell: |
+    (Get-WsusServer).GetSubscription().LastModifiedTime.Year
+  register: wsus_last_sync_year_raw
+
+- name: Do initial synchronization to get latest categories
+  win_shell: |
+    $wsussubscription = (Get-WSUSServer).GetSubscription()
+    $wsussubscription.StartSynchronizationForCategoryOnly()
+
+- name: Wait for synchronization to complete
+  win_shell: |
+    $wsus = Get-WSUSServer
+    $subscription = $wsus.GetSubscription()
+    if ($subscription.GetSynchronizationStatus() -ne 'NotProcessing'){
+      $subscription.GetSynchronizationStatus()
+      exit 1
+    }
+    $subscription.GetSynchronizationStatus()
+    exit 0
+  register: sync
+  until: sync.rc == 0
+  retries: 1000
+  delay: 60
+  ignore_errors: true
+
+- name: Disable all classifications
+  win_shell: |
+    Get-WsusClassification | Set-WsusClassification -Disable
+
+- name: Set classifications -> loop
+  win_shell: |
+    Get-WsusClassification | Where-Object -FilterScript {$_.Classification.Title -Eq "{{ item }}"} | Set-WsusClassification
+  loop: "{{ classification_list|flatten(levels=1) }}"
+
+- name: Disable All Products
+  win_shell: |
+    Get-WsusProduct | Set-WsusProduct -Disable
+
+- name: Set products to synchronise -> loop
+  win_shell: |
+    Get-WSUSProduct | Where-Object -FilterScript {$_.product.title -eq "{{ item }}" } | Set-WsusProduct
+  loop: "{{ products_list|flatten(levels=1) }}"
+
+- name: Enable Synchronization at Midnight every day
+  win_shell: |
+    $wsussubscription = (Get-WSUSServer).GetSubscription()
+    $wsussubscription.SynchronizeAutomatically=$true
+    $wsussubscription.SynchronizeAutomaticallyTimeOfDay= (New-TimeSpan -Hours 0)
+    $wsussubscription.NumberOfSynchronizationsPerDay=1
+    $wsussubscription.Save()
+
+- name: Enable automatic approval rule
+  win_shell: |
+    $automatic_approval_rule = (Get-WsusServer).GetInstallApprovalRules() | Where {$_.Name -Eq "Default Automatic Approval Rule"}
+    $automatic_approval_rule.Enabled = $True
+    $automatic_approval_rule.Save()
+    $automatic_approval_rule.ApplyRule()
+

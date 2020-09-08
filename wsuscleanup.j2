@@ -1,0 +1,23 @@
+$DeclineSupersededUpdates = $True
+$DeclineExpiredUpdates = $True
+$CleanupObsoleteUpdates= $True
+$CompressUpdates = $True
+$CleanupObsoleteComputers = $True
+$CleanupUnneededContentFiles = $True
+$CleanupLocalPublishedContentFiles = $True
+$TimeOfDay = "04:00:00"
+
+$WsusServer = Get-WsusServer
+
+if($WsusServer)
+{
+    $WsusCleanupManager = $WsusServer.GetCleanupManager()
+    if($WsusCleanupManager)
+    {
+        $WsusCleanupScope = New-Object Microsoft.UpdateServices.Administration.CleanupScope($DeclineSupersededUpdates,$DeclineExpiredUpdates,$CleanupObsoleteUpdates,$CompressUpdates,$CleanupObsoleteComputers,$CleanupUnneededContentFiles,$CleanupLocalPublishedContentFiles)
+        $WsusCleanupResults = $WsusCleanupManager.PerformCleanup($WsusCleanupScope)
+        if($WsusCleanupResults)
+        {
+        $WsusCleanupResults | Out-File {{ log_folder }}\WsusCleanup.log -Force
+        }
+    }
