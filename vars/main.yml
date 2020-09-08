@@ -1,0 +1,20 @@
+---
+use_proxy: no
+wsus_facts: yes
+install_management_tools: yes
+content_folder: "C:\\WSUS"
+script_folder: "{{content_folder}}\\Scripts"
+log_folder: "{{content_folder}}\\Logs"
+products_list:
+  - "Windows Server 2016"
+  - "Windows Server 2019"
+classification_list:
+  - "Critical Updates"
+  - "Security Updates"
+  - "Definition Updates"
+  - "Update Rollups"
+  - "Updates"
+  - "Service Packs"
+  - "Feature Packs"
+  - "Tools"
+
