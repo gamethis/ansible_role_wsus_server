@@ -1,5 +1,6 @@
 ---
 galaxy_info:
+  role_name: wsus_server
   author: Larry
   description: A role for installing and configuring WSUS Server
   company: N/A
