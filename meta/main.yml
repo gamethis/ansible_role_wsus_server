@@ -5,7 +5,7 @@ galaxy_info:
   description: A role for installing and configuring WSUS Server
   company: N/A
   license: MIT
-  min_ansible_version: 2.10
+  min_ansible_version: 2.9
   github_branch: master
   platforms:
     - name: Windows
