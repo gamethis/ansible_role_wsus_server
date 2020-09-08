@@ -13,9 +13,9 @@ galaxy_info:
       - 2016
       - 2019
   galaxy_tags:
-  - Windows
-  - WSUS
-  - Server
-  - Patching
+  - windows
+  - wsus
+  - server
+  - patching
 dependencies: []
 
