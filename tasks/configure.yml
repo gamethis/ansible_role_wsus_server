@@ -7,8 +7,8 @@
 - name: Set content folder in WSUS
   win_command: 'WsusUtil.exe postinstall CONTENT_DIR={{ content_folder }}'
   args:
-      chdir: 'C:\Program Files\Update Services\Tools'
-      creates: "{{ content_folder }}\\WSUSContent"
+    chdir: 'C:\Program Files\Update Services\Tools'
+    creates: "{{ content_folder }}\\WSUSContent"
 
 - name: Set WSUS to synchronise from Microsoft Update
   win_shell: |
@@ -31,9 +31,9 @@
     $wsusConfig.AnonymousProxyAccess = $True
     $wsusConfig.Save()
   when:
-  - use_proxy
-  - wsus_proxy is defined
-  - wsus_proxy_port is defined
+    - use_proxy
+    - wsus_proxy is defined
+    - wsus_proxy_port is defined
 
 
 - name: Get Synchronization Source State
@@ -104,4 +104,3 @@
     $automatic_approval_rule.Enabled = $True
     $automatic_approval_rule.Save()
     $automatic_approval_rule.ApplyRule()
-

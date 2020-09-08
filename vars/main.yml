@@ -1,7 +1,7 @@
 ---
-use_proxy: no
-wsus_facts: yes
-install_management_tools: yes
+use_proxy: false
+wsus_facts: true
+install_management_tools: true
 content_folder: "C:\\WSUS"
 script_folder: "{{content_folder}}\\Scripts"
 log_folder: "{{content_folder}}\\Logs"
@@ -17,4 +17,3 @@ classification_list:
   - "Service Packs"
   - "Feature Packs"
   - "Tools"
-
