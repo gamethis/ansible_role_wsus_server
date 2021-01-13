@@ -24,8 +24,7 @@
   register: services
 
 - name: Reboot for WSUS Install
-  import_role:
-    name: reboot
+  win_reboot:
   when:
     wsus.reboot_required
     or widdb.reboot_required or services.reboot_required
