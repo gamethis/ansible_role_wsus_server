@@ -31,7 +31,7 @@
     $wsusconfig.AllUpdateLanguagesEnabled = $false
     $wsusconfig.SetEnabledUpdateLanguages($languages)
     $wsusconfig.Save()
-  when: _currentwsuslanguages.EnabledUpdateLanguages != wsus_languages or
+  when: _currentwsuslanguages.EnabledUpdateLanguages | symmetric_difference(wsus_languages) | length > 0 or
         _currentwsuslanguages.AllUpdateLanguagesEnabled
 
 - name: Set WSUS to synchronise from Microsoft Update
