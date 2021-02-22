@@ -1,2 +1,4 @@
 ---
-# defaults file for wsus
+
+wsus_languages:
+  - en

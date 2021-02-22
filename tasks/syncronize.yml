@@ -1,4 +1,5 @@
 ---
+
 - name: Start synchronization
   win_shell: |
     $wsus = Get-WSUSServer

@@ -15,12 +15,12 @@ The following variables are defined in `/vars/main.yml`:
 * `install_management_tools`: Whether to install the WSUS MMC or not.  Default is `yes`
 * `content_folder`: Sets the folder location for WSUS to store its content.  Default is `C:\WSUS`
 * `script_folder`: Sets the folder for storing WSUS scripts. Default is `C:\WSUS\Scripts\`
-* `log_folder`: Sets the folder for logging WSUS related items. Default
-is `C:\WSUS\Logs`
+* `log_folder`: Sets the folder for logging WSUS related items. Default is `C:\WSUS\Logs`
 * `products_list`: A list of products which updates will be downloaded for.  Default items are `Windows Server 2016` and `Windows Server 2019`
 * `classification_list`: A list of the Update Classifications that will be enabled.  Default items are `Critical Updates` and `Security Updates`
 * `use_proxy`: Used to determine if proxy for WSUS Server will be configured. Default is `no`, only applies if `wsus_port` and `wsus_proxy` are defined.
 * `wsus_facts`: Determines whether WSUS facts should be returned
+* `wsus_languages`: A list of languages for which updates will be downloaded by WSUS. Default is just `en` (English)
 
 Dependencies
 ------------

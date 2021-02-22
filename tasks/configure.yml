@@ -10,16 +10,33 @@
     chdir: 'C:\Program Files\Update Services\Tools'
     creates: "{{ content_folder }}\\WSUSContent"
 
+- name: Get current enabled languages in WSUS
+  win_shell: |
+    $wsuscfg = (Get-WsusServer).GetConfiguration()
+    [PSCustomObject]@{
+      'AllUpdateLanguagesEnabled' = $wsuscfg.AllUpdateLanguagesEnabled
+      'EnabledUpdateLanguages'    = @($wsuscfg.GetEnabledUpdateLanguages())
+    } | ConvertTo-Json
+  register: _currentwsuslanguages_command
+  changed_when: false
+
+- name: Parse current enabled languages from JSON
+  set_fact:
+    _currentwsuslanguages: "{{ _currentwsuslanguages_command.stdout | from_json() }}"
+
+- name: Set update languages
+  win_shell: |
+    [array]$languages = ConvertFrom-Json -InputObject '{{ wsus_languages | flatten(levels=1) | to_json(ensure_ascii=False) }}'
+    $wsusconfig = (Get-WsusServer).GetConfiguration()
+    $wsusconfig.AllUpdateLanguagesEnabled = $false
+    $wsusconfig.SetEnabledUpdateLanguages($languages)
+    $wsusconfig.Save()
+  when: _currentwsuslanguages.EnabledUpdateLanguages | symmetric_difference(wsus_languages) | length > 0 or
+        _currentwsuslanguages.AllUpdateLanguagesEnabled
+
 - name: Set WSUS to synchronise from Microsoft Update
   win_shell: |
     Set-WsusServerSynchronization -SyncFromMU
-
-- name: Set Updates to English Only
-  win_shell: |
-    $wsusconfig = (Get-WsusServer).GetConfiguration()
-    $wsusconfig.AllUpdateLanguagesEnabled = $false
-    $wsusconfig.SetEnabledUpdateLanguages("en")
-    $wsusconfig.Save()
 
 - name: Configure Proxy for WSUS Server
   win_shell: |
@@ -35,16 +52,10 @@
     - wsus_proxy is defined
     - wsus_proxy_port is defined
 
-
 - name: Get Synchronization Source State
   win_shell: |
     (Get-WsusServer).GetConfiguration().SyncFromMicrosoftUpdate
   register: wsus_sync_source_state_raw
-
-- name: Get All Languages Enabled State
-  win_shell: |
-    (Get-WsusServer).GetConfiguration().AllUpdateLanguagesEnabled
-  register: wsus_all_languages_enabled_raw
 
 - name: Get Last Sync Year
   win_shell: |
