@@ -2,3 +2,8 @@
 
 wsus_languages:
   - en
+
+# Use 0 for midnight, not 24
+wsus_sync_daily_time:
+  hour: 0
+  minute: 0
