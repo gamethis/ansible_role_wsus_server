@@ -21,6 +21,10 @@ The following variables are defined in `/vars/main.yml`:
 * `use_proxy`: Used to determine if proxy for WSUS Server will be configured. Default is `no`, only applies if `wsus_port` and `wsus_proxy` are defined.
 * `wsus_facts`: Determines whether WSUS facts should be returned
 * `wsus_languages`: A list of languages for which updates will be downloaded by WSUS. Default is just `en` (English)
+* ```wsus_sync_daily_time:
+    hour: 0
+    minute: 0```
+  Set the time of day when WSUS will run an automatic synchronization. Use `hour: 0` for midnight.
 
 Dependencies
 ------------
@@ -46,6 +50,7 @@ An example playbook for using this role:
     roles:
       - wsus
 ```
+
 License
 -------
 
