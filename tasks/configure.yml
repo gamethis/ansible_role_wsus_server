@@ -101,13 +101,29 @@
     Get-WSUSProduct | Where-Object -FilterScript {$_.product.title -eq "{{ item }}" } | Set-WsusProduct
   loop: "{{ products_list|flatten(levels=1) }}"
 
-- name: Enable Synchronization at Midnight every day
+- name: Set automatic daily synchronization
   win_shell: |
+    $changed = $false
+    $newTime = [TimeSpan]::new({{ wsus_sync_daily_time.hour }}, {{ wsus_sync_daily_time.minute }}, 0)
     $wsussubscription = (Get-WSUSServer).GetSubscription()
-    $wsussubscription.SynchronizeAutomatically=$true
-    $wsussubscription.SynchronizeAutomaticallyTimeOfDay= (New-TimeSpan -Hours 0)
-    $wsussubscription.NumberOfSynchronizationsPerDay=1
-    $wsussubscription.Save()
+    if (-not $wsussubscription.SynchronizeAutomatically) {
+      $wsussubscription.SynchronizeAutomatically = $true
+      $changed = $true
+    }
+    if ($wsussubscription.SynchronizeAutomaticallyTimeOfDay -ne $newTime) {
+      $wsussubscription.SynchronizeAutomaticallyTimeOfDay = $newTime
+      $changed = $true
+    }
+    if ($wsussubscription.NumberOfSynchronizationsPerDay -ne 1) {
+      $wsussubscription.NumberOfSynchronizationsPerDay = 1
+      $changed = $true
+    }
+    if ($changed) {
+      $wsussubscription.Save()
+      Write-Output "change"
+    }
+  register: _dailysync_command
+  changed_when: "'change' in _dailysync_command.stdout"
 
 - name: Enable automatic approval rule
   win_shell: |
