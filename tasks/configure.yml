@@ -83,23 +83,52 @@
   delay: 60
   ignore_errors: true
 
-- name: Disable all classifications
+- name: Set classifications to synchronize
   win_shell: |
-    Get-WsusClassification | Set-WsusClassification -Disable
+    [array]$current = (Get-WsusServer).GetSubscription().GetUpdateClassifications()
+    [array]$allClassifications = Get-WsusClassification
+    [array]$shouldTitles = ConvertFrom-Json @'
+    {{ wsus_classifications_list | flatten(levels=1) | to_json() }}
+    '@
+    [array]$should = ($allClassifications | Where-Object { $_.Classification.Title -in $shouldTitles }).Classification
+    $diffs = Compare-Object $current $should -Property Id
+    if ($diffs) {
+      foreach ($classification in $diffs) {
+        if ($classification.SideIndicator -eq '<=') {
+          $allClassifications.Where{ $_.Classification.Id -eq $classification.Id } | Set-WsusClassification -Disable
+        }
+        if ($classification.SideIndicator -eq '=>') {
+          $allClassifications.Where{ $_.Classification.Id -eq $classification.Id } | Set-WsusClassification
+        }
+      }
+      Write-Output "change"
+    }
+  register: _classificationsenable_command
+  changed_when: "'change' in _classificationsenable_command.stdout"
 
-- name: Set classifications -> loop
+- name: Set products to synchronize
   win_shell: |
-    Get-WsusClassification | Where-Object -FilterScript {$_.Classification.Title -Eq "{{ item }}"} | Set-WsusClassification
-  loop: "{{ classification_list|flatten(levels=1) }}"
-
-- name: Disable All Products
-  win_shell: |
-    Get-WsusProduct | Set-WsusProduct -Disable
-
-- name: Set products to synchronise -> loop
-  win_shell: |
-    Get-WSUSProduct | Where-Object -FilterScript {$_.product.title -eq "{{ item }}" } | Set-WsusProduct
-  loop: "{{ products_list|flatten(levels=1) }}"
+    [array]$current = (Get-WsusServer).GetSubscription().GetUpdateCategories()
+    [array]$allProducts = Get-WSUSProduct
+    [array]$shouldTitles = ConvertFrom-Json @'
+    {{ wsus_products_list | flatten(levels=1) | to_json() }}
+    '@
+    [array]$should = ($allProducts | Where-Object { $_.Product.Title -in $shouldTitles }).Product
+    $diffs = Compare-Object $current $should -Property Id
+    if ($diffs) {
+      $changed = $true
+      foreach ($product in $diffs) {
+        if ($product.SideIndicator -eq '<=') {
+          $allProducts.Where{ $_.Product.Id -eq $product.Id } | Set-WsusProduct -Disable
+        }
+        if ($product.SideIndicator -eq '=>') {
+          $allProducts.Where{ $_.Product.Id -eq $product.Id } | Set-WsusProduct
+        }
+      }
+      Write-Output "change"
+    }
+  register: _productsenable_command
+  changed_when: "'change' in _productsenable_command.stdout"
 
 - name: Set automatic daily synchronization
   win_shell: |
