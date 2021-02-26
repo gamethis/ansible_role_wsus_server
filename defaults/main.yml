@@ -15,9 +15,4 @@ wsus_products_list:
 wsus_classifications_list:
   - Critical Updates
   - Security Updates
-  - Definition Updates
-  - Update Rollups
-  - Updates
-  - Service Packs
-  - Feature Packs
-  - Tools
+
