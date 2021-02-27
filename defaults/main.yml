@@ -7,3 +7,12 @@ wsus_languages:
 wsus_sync_daily_time:
   hour: 0
   minute: 0
+
+wsus_products_list:
+  - Windows Server 2016
+  - Windows Server 2019
+
+wsus_classifications_list:
+  - Critical Updates
+  - Security Updates
+
