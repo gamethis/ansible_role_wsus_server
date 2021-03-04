@@ -154,9 +154,17 @@
   register: _dailysync_command
   changed_when: "'change' in _dailysync_command.stdout"
 
-- name: Enable automatic approval rule
+- name: Configure automatic approval rule
   win_shell: |
-    $automatic_approval_rule = (Get-WsusServer).GetInstallApprovalRules() | Where {$_.Name -Eq "Default Automatic Approval Rule"}
-    $automatic_approval_rule.Enabled = $True
-    $automatic_approval_rule.Save()
-    $automatic_approval_rule.ApplyRule()
+    [bool]$should = {{ wsus_enable_default_approval_rule | bool | int }}
+    $automatic_approval_rule = (Get-WsusServer).GetInstallApprovalRules() |
+      Where-Object { $_.Name -eq 'Default Automatic Approval Rule' }
+    if ($automatic_approval_rule.Enabled -ne $should) {
+      $automatic_approval_rule.Enabled = $should
+      $automatic_approval_rule.Save()
+      $automatic_approval_rule.ApplyRule()
+      Write-Output "change"
+    }
+  register: _autorule_command
+  changed_when: "'change' in _autorule_command.stdout"
+
