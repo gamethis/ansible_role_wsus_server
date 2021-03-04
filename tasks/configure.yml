@@ -1,4 +1,5 @@
 ---
+
 - name: Create content folder
   win_file:
     path: "{{ content_folder }}"
@@ -35,8 +36,7 @@
         _currentwsuslanguages.AllUpdateLanguagesEnabled
 
 - name: Set WSUS to synchronise from Microsoft Update
-  win_shell: |
-    Set-WsusServerSynchronization -SyncFromMU
+  win_shell: Set-WsusServerSynchronization -SyncFromMU
 
 - name: Configure Proxy for WSUS Server
   win_shell: |
