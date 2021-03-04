@@ -1,5 +1,7 @@
 ---
 
+wsus_enable_default_approval_rule: yes
+
 wsus_languages:
   - en
 
