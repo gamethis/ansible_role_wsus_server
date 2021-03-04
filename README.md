@@ -20,6 +20,7 @@ The following variables are defined in `/vars/main.yml`:
 * `wsus_classifications_list`: A list of the Update Classifications that will be enabled. Default items are `Critical Updates` and `Security Updates`
 * `use_proxy`: Used to determine if proxy for WSUS Server will be configured. Default is `no`, only applies if `wsus_port` and `wsus_proxy` are defined.
 * `wsus_facts`: Determines whether WSUS facts should be returned
+* `wsus_enable_default_approval_rule`: Enable or disable the default approval rule in WSUS
 * `wsus_languages`: A list of languages for which updates will be downloaded by WSUS. Default is just `en` (English)
 * ```
   wsus_sync_daily_time:
