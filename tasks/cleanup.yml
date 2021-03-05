@@ -2,18 +2,18 @@
 
 - name: Create Script Folder
   win_file:
-    path: "{{ script_folder }}"
+    path: "{{ wsus_script_folder }}"
     state: directory
 
 - name: Create Log Folder
   win_file:
-    path: "{{ log_folder }}"
+    path: "{{ wsus_log_folder }}"
     state: directory
 
-- name: Add WSuSCleanup script
+- name: Copy WSUSCleanup script to machine
   win_template:
     src: wsuscleanup.j2
-    dest: "{{ script_folder }}\\WSUSCleanup.ps1"
+    dest: "{{ wsus_script_folder }}\\WSUSCleanup.ps1"
 
 - name: Create task to run a WSUS cleanup script
   win_scheduled_task:
@@ -21,7 +21,7 @@
     description: Run WSUS Cleanup
     actions:
       - path: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe
-        arguments: "-ExecutionPolicy Unrestricted -NonInteractive -File {{ script_folder }}\\WSUSCleanup.ps1"
+        arguments: "-ExecutionPolicy Unrestricted -NonInteractive -File \"{{ wsus_script_folder }}\\WSUSCleanup.ps1\""
     triggers:
       - type: daily
         start_boundary: '2019-04-01T04:00:00'

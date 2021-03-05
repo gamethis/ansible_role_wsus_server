@@ -9,15 +9,13 @@ $TimeOfDay = "04:00:00"
 
 $WsusServer = Get-WsusServer
 
-if($WsusServer)
-{
+if ($WsusServer) {
     $WsusCleanupManager = $WsusServer.GetCleanupManager()
-    if($WsusCleanupManager)
-    {
+    if ($WsusCleanupManager) {
         $WsusCleanupScope = New-Object Microsoft.UpdateServices.Administration.CleanupScope($DeclineSupersededUpdates,$DeclineExpiredUpdates,$CleanupObsoleteUpdates,$CompressUpdates,$CleanupObsoleteComputers,$CleanupUnneededContentFiles,$CleanupLocalPublishedContentFiles)
         $WsusCleanupResults = $WsusCleanupManager.PerformCleanup($WsusCleanupScope)
-        if($WsusCleanupResults)
-        {
-        $WsusCleanupResults | Out-File {{ log_folder }}\WsusCleanup.log -Force
+        if($WsusCleanupResults) {
+            $WsusCleanupResults | Out-File "{{ wsus_log_folder }}\WsusCleanup.log" -Force
         }
     }
+}

@@ -1,15 +1,15 @@
 ---
 
-- name: Create content folder
+- name: Ensure content directory exists
   win_file:
-    path: "{{ content_folder }}"
+    path: "{{ wsus_content_folder }}"
     state: directory
 
 - name: Set content folder in WSUS
-  win_command: 'WsusUtil.exe postinstall CONTENT_DIR={{ content_folder }}'
+  win_command: 'WsusUtil.exe postinstall CONTENT_DIR={{ wsus_content_folder }}'
   args:
-    chdir: 'C:\Program Files\Update Services\Tools'
-    creates: "{{ content_folder }}\\WSUSContent"
+    chdir: "{{ ansible_env.ProgramFiles }}\\Update Services\\Tools"
+    creates: "{{ wsus_content_folder }}\\WSUSContent"
 
 - name: Get current enabled languages in WSUS
   win_shell: |
@@ -48,7 +48,7 @@
     $wsusConfig.AnonymousProxyAccess = $True
     $wsusConfig.Save()
   when:
-    - use_proxy
+    - wsus_use_proxy
     - wsus_proxy is defined
     - wsus_proxy_port is defined
 
@@ -56,11 +56,13 @@
   win_shell: |
     (Get-WsusServer).GetConfiguration().SyncFromMicrosoftUpdate
   register: wsus_sync_source_state_raw
+  changed_when: false
 
 - name: Get Last Sync Year
   win_shell: |
     (Get-WsusServer).GetSubscription().LastModifiedTime.Year
   register: wsus_last_sync_year_raw
+  changed_when: false
 
 - name: Do initial synchronization to get latest categories
   win_shell: |

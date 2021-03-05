@@ -1,9 +1,6 @@
 ---
 
-use_proxy: false
 wsus_facts: true
-install_management_tools: true
-content_folder: "C:\\WSUS"
-script_folder: "{{content_folder}}\\Scripts"
-log_folder: "{{content_folder}}\\Logs"
+wsus_script_folder: "{{ wsus_content_folder }}\\Scripts"
+wsus_log_folder: "{{ wsus_content_folder }}\\Logs"
 
