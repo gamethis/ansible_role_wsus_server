@@ -1,7 +1,7 @@
 ---
 galaxy_info:
   role_name: wsus_server
-  author: Larry
+  author: Larry Lane @gamtheis
   description: A role for installing and configuring WSUS Server
   company: N/A
   license: MIT
