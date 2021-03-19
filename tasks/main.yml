@@ -1,5 +1,4 @@
 ---
-
 - name: Instgall WSUS Binaries
   import_tasks: install.yml
 
