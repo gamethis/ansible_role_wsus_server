@@ -1,5 +1,4 @@
 ---
-
 wsus_content_folder: "C:\\WSUS"
 
 wsus_use_proxy: false
@@ -21,4 +20,3 @@ wsus_products_list:
 wsus_classifications_list:
   - Critical Updates
   - Security Updates
-
