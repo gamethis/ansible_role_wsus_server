@@ -1,5 +1,4 @@
 ---
-
 - name: Ensure content directory exists
   win_file:
     path: "{{ wsus_content_folder }}"
@@ -169,4 +168,3 @@
     }
   register: _autorule_command
   changed_when: "'change' in _autorule_command.stdout"
-
