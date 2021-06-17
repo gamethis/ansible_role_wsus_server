@@ -1,3 +1,5 @@
+[![Lint ansible](https://github.com/gamethis/ansible_role_wsus_server/actions/workflows/main.yml/badge.svg)](https://github.com/gamethis/ansible_role_wsus_server/actions/workflows/main.yml)
+
 WSUS Server
 =========
 
