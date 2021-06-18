@@ -80,7 +80,7 @@
     exit 0
   register: sync
   until: sync.rc == 0
-  retries: 1000
+  retries: "{{ wsus_category_sync_timeout_minutes }}"
   delay: 60
   ignore_errors: true
 
