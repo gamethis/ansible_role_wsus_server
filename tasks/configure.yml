@@ -92,17 +92,19 @@
     {{ wsus_classifications_list | flatten(levels=1) | to_json() }}
     '@
     [array]$should = ($allClassifications | Where-Object { $_.Classification.Title -in $shouldTitles }).Classification
-    $diffs = Compare-Object $current $should -Property Id
-    if ($diffs) {
-      foreach ($classification in $diffs) {
-        if ($classification.SideIndicator -eq '<=') {
-          $allClassifications.Where{ $_.Classification.Id -eq $classification.Id } | Set-WsusClassification -Disable
+    if ($null -ne $should){
+        $diffs = Compare-Object $current $should -Property Id
+        if ($diffs) {
+          foreach ($classification in $diffs) {
+            if ($classification.SideIndicator -eq '<=') {
+              $allClassifications.Where{ $_.Classification.Id -eq $classification.Id } | Set-WsusClassification -Disable
+            }
+            if ($classification.SideIndicator -eq '=>') {
+              $allClassifications.Where{ $_.Classification.Id -eq $classification.Id } | Set-WsusClassification
+            }
+          }
+          Write-Output "change"
         }
-        if ($classification.SideIndicator -eq '=>') {
-          $allClassifications.Where{ $_.Classification.Id -eq $classification.Id } | Set-WsusClassification
-        }
-      }
-      Write-Output "change"
     }
   register: _classificationsenable_command
   changed_when: "'change' in _classificationsenable_command.stdout"
@@ -115,15 +117,17 @@
     {{ wsus_products_list | flatten(levels=1) | to_json() }}
     '@
     [array]$should = ($allProducts | Where-Object { $_.Product.Title -in $shouldTitles }).Product
-    $diffs = Compare-Object $current $should -Property Id
-    if ($diffs) {
-      $changed = $true
-      foreach ($product in $diffs) {
-        if ($product.SideIndicator -eq '<=') {
-          $allProducts.Where{ $_.Product.Id -eq $product.Id } | Set-WsusProduct -Disable
-        }
-        if ($product.SideIndicator -eq '=>') {
-          $allProducts.Where{ $_.Product.Id -eq $product.Id } | Set-WsusProduct
+    if ($null -ne $should){
+      $diffs = Compare-Object $current $should -Property Id
+      if ($diffs) {
+        $changed = $true
+        foreach ($product in $diffs) {
+          if ($product.SideIndicator -eq '<=') {
+            $allProducts.Where{ $_.Product.Id -eq $product.Id } | Set-WsusProduct -Disable
+          }
+          if ($product.SideIndicator -eq '=>') {
+            $allProducts.Where{ $_.Product.Id -eq $product.Id } | Set-WsusProduct
+          }
         }
       }
       Write-Output "change"
