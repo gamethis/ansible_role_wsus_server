@@ -88,7 +88,7 @@
   win_shell: |
     [array]$current = (Get-WsusServer).GetSubscription().GetUpdateClassifications()
     [array]$allClassifications = Get-WsusClassification
-    [array]$shouldTitles = ConvertFrom-Json @'
+    [array]$shouldTitles = ConvertFrom-Json -InputObject @'
     {{ wsus_classifications_list | flatten(levels=1) | to_json() }}
     '@
     [array]$should = ($allClassifications | Where-Object { $_.Classification.Title -in $shouldTitles }).Classification
@@ -111,7 +111,7 @@
   win_shell: |
     [array]$current = (Get-WsusServer).GetSubscription().GetUpdateCategories()
     [array]$allProducts = Get-WSUSProduct
-    [array]$shouldTitles = ConvertFrom-Json @'
+    [array]$shouldTitles = ConvertFrom-Json -InputObject @'
     {{ wsus_products_list | flatten(levels=1) | to_json() }}
     '@
     [array]$should = ($allProducts | Where-Object { $_.Product.Title -in $shouldTitles }).Product
