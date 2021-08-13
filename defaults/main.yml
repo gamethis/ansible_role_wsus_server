@@ -21,3 +21,5 @@ wsus_products_list:
 wsus_classifications_list:
   - Critical Updates
   - Security Updates
+
+wsus_install_report_viewer: true
