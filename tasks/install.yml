@@ -43,3 +43,4 @@
   community.windows.win_iis_website:
     name: "Default Web Site"
     state: absent
+  when: wsus_remove_default_website
