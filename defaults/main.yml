@@ -5,6 +5,8 @@ wsus_use_proxy: false
 wsus_install_management_tools: true
 wsus_enable_default_approval_rule: true
 wsus_category_sync_timeout_minutes: 1000
+wsus_remove_default_website: true
+wsus_install_report_viewer: true
 
 wsus_languages:
   - en
@@ -26,5 +28,4 @@ wsus_computer_target_group_list:
   - Servers
   - WorkStations
 
-wsus_install_report_viewer: true
 wsus_chocolatey_source: "http://chocolatey.org/api/v2"
