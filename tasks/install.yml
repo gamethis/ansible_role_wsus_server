@@ -37,3 +37,9 @@
     _wsusfeature.reboot_required
     or _widdb.reboot_required
     or _services.reboot_required
+
+# Remove Default Web Site and the standard port 80 binding
+- name: Remove Default Web Site
+  community.windows.win_iis_website:
+    name: "Default Web Site"
+    state: absent
