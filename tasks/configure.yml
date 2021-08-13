@@ -50,6 +50,23 @@
     - wsus_use_proxy
     - wsus_proxy is defined
     - wsus_proxy_port is defined
+ 
+ - name: Configure Target groups
+   win_shell: | 
+     [array]$computer_target_group_list = ConvertFrom-Json -InputObject @'
+     {{ wsus_computer_target_group_list | flatten(levels=1) | to_json() }}
+     '@
+     $wsus = Get-WSUSServer
+     $TargetGroups = $wsus.GetComputerTargetGroups()
+     foreach ($target in $computer_target_group_list){
+         if ($target -notin $wsus.GetComputerTargetGroups().Name){
+             $wsus.CreateComputerTargetGroup($target)
+             Write-Output "change"
+         }
+     }
+   register: _wsus_target_groups
+   changed_when: "'change' in _wsus_target_groups.stdout"
+    
 
 - name: Get Synchronization Source State
   win_shell: |
