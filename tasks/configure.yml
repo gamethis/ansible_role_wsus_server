@@ -51,7 +51,7 @@
     - wsus_proxy is defined
     - wsus_proxy_port is defined
  
- - name: Configure Target groups
+- name: Configure Target groups
    win_shell: | 
      [array]$computer_target_group_list = ConvertFrom-Json -InputObject @'
      {{ wsus_computer_target_group_list | flatten(levels=1) | to_json() }}
