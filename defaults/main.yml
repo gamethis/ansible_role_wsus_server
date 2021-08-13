@@ -23,3 +23,4 @@ wsus_classifications_list:
   - Security Updates
 
 wsus_install_report_viewer: true
+wsus_chocolatey_source: "http://chocolatey.org/api/v2"
