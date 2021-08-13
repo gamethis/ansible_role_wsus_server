@@ -1,6 +1,7 @@
 ---
 galaxy_info:
   role_name: wsus_server
+  namespace: gamethis
   author: Larry Lane @gamtheis
   description: A role for installing and configuring WSUS Server
   company: N/A
