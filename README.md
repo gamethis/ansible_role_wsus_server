@@ -20,7 +20,8 @@ The following variables are defined in `/defaults/main.yml`:
 * `wsus_enable_default_approval_rule`: Enable or disable the default approval rule in WSUS. Default is `true`.
 * `wsus_category_sync_timeout_minutes`: Sets the amount of time in minutes for sync timeout to occur.  Default is `1000`.
 * `wsus_languages`: A list of languages for which updates will be downloaded by WSUS. Default is just `en` (English)
-* `wsus_choclatey_source`: Defaults to default community chocolatey repository. Default is `http://chocolatey.org/api/v2`
+* `wsus_choclatey_source`: Defaults to default community chocolatey repository. Default is `http://chocolatey.org/api/v2`.
+* `wsus_remove_default_website`: Choice to remove default iis website.  Default is `true`.
 * `wsus_install_report_viewer`: Choice on whether to install report viewer. Defaults is `True`.
 * `wsus_computer_target_group_list`: List of target groups to create on WSUS Server. Defaults are `Servers` and `WorkStations`
   wsus_sync_daily_time:
@@ -66,3 +67,5 @@ MIT
 
 Author Information
 ------------------
+
+@gamthis (Larry Lane)
