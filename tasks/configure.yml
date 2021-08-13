@@ -51,6 +51,18 @@
     - wsus_proxy is defined
     - wsus_proxy_port is defined
 
+- name: Configuring How groups are assigned
+  win_shell: |
+    $wsus = Get-WSUSServer
+    $wsusConfig = $wsus.GetConfiguration()
+    if ($wsusConfig.TargetingMode -ne "{{ wsus_targeting_mode }}"){
+      $wsusConfig.TargetingMode = "{{ wsus_targeting_mode }}"
+      $wsusConfig.Save()
+      Write-Output "Changed"
+    }
+  register: _wsus_targeting_mode
+  changed_when: "'change' in _wsus_targeting_mode.stdout"
+
 - name: Configure Target groups
   win_shell: |
      [array]$computer_target_group_list = ConvertFrom-Json -InputObject @'
