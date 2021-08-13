@@ -52,7 +52,7 @@
     - wsus_proxy_port is defined
  
 - name: Configure Target groups
-   win_shell: | 
+  win_shell: | 
      [array]$computer_target_group_list = ConvertFrom-Json -InputObject @'
      {{ wsus_computer_target_group_list | flatten(levels=1) | to_json() }}
      '@
@@ -64,10 +64,9 @@
              Write-Output "change"
          }
      }
-   register: _wsus_target_groups
-   changed_when: "'change' in _wsus_target_groups.stdout"
+  register: _wsus_target_groups
+  changed_when: "'change' in _wsus_target_groups.stdout"
     
-
 - name: Get Synchronization Source State
   win_shell: |
     (Get-WsusServer).GetConfiguration().SyncFromMicrosoftUpdate
