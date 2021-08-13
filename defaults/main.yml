@@ -3,7 +3,7 @@ wsus_content_folder: "C:\\WSUS"
 
 wsus_use_proxy: false
 wsus_install_management_tools: true
-wsus_enable_default_approval_rule: yes
+wsus_enable_default_approval_rule: true
 wsus_category_sync_timeout_minutes: 1000
 
 wsus_languages:
