@@ -22,7 +22,7 @@ The following variables are defined in `/defaults/main.yml`:
 * `wsus_languages`: A list of languages for which updates will be downloaded by WSUS. Default is just `en` (English)
 * `wsus_choclatey_source`: Defaults to default community chocolatey repository. Default is `http://chocolatey.org/api/v2`
 * `wsus_install_report_viewer`: Choice on whether to install report viewer. Defaults is `True`.
-* ```
+* `wsus_computer_target_group_list`: List of target groups to create on WSUS Server. Defaults are `Servers` and `WorkStations`
   wsus_sync_daily_time:
     hour: 0
     minute: 0
