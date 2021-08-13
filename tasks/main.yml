@@ -1,5 +1,5 @@
 ---
-- name: Instgall WSUS Binaries
+- name: Install WSUS Binaries
   import_tasks: install.yml
 
 - name: Configure WSUS Server
