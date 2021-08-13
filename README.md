@@ -24,6 +24,7 @@ The following variables are defined in `/defaults/main.yml`:
 * `wsus_remove_default_website`: Choice to remove default iis website.  Default is `true`.
 * `wsus_install_report_viewer`: Choice on whether to install report viewer. Defaults is `True`.
 * `wsus_computer_target_group_list`: List of target groups to create on WSUS Server. Defaults are `Servers` and `WorkStations`
+* `wsus_targeting_mode`: Option of how to set Target Groups valid options are `Server` and `Client`
   wsus_sync_daily_time:
     hour: 0
     minute: 0
