@@ -22,5 +22,9 @@ wsus_classifications_list:
   - Critical Updates
   - Security Updates
 
+wsus_computer_target_group_list:
+  - Servers
+  - WorkStations
+
 wsus_install_report_viewer: true
 wsus_chocolatey_source: "http://chocolatey.org/api/v2"
