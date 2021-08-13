@@ -1,4 +1,7 @@
 ---
+- name: Check Variables
+  import_tasks: validate.yml
+  
 - name: Install WSUS Binaries
   import_tasks: install.yml
 
