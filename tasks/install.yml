@@ -22,7 +22,7 @@
     include_sub_features: false
     include_management_tools: "{{ wsus_install_management_tools }}"
   register: _services
-  
+
 - name: Install Reportviewer
   chocolatey.chocolatey.win_chocolatey:
     name: 'reportviewer2012'
