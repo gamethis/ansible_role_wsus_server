@@ -18,7 +18,4 @@ galaxy_info:
     - wsus
     - server
     - patching
-dependencies:
-  - community.windows
-  - chocolatey.chocolatey
-  - ansible.windows
+dependencies: []
